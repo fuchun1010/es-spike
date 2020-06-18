@@ -1,5 +1,7 @@
 package com.tank;
 
+import io.vavr.control.Try;
+import lombok.val;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -12,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
+import java.util.Map;
 
 /**
  * Unit test for simple App.
@@ -23,14 +25,12 @@ public class ElasticSearchTest {
 
   @Test
   public void testRestClient() {
-    Assert.assertNotNull(resetClient);
-    GetRequest request = new GetRequest("order-comment", "_doc", "1");
-    try {
-      GetResponse response = this.resetClient.get(request, RequestOptions.DEFAULT);
-      System.out.println(response.getSource().size());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    val body = Try.of(() -> {
+      GetRequest request = new GetRequest("order-comment", "1");
+      return this.resetClient.get(request, RequestOptions.DEFAULT);
+    }).onSuccess(GetResponse::getSource).getOrElseThrow(() -> new IllegalArgumentException("id为1的数据不存在"));
+    Map<String, Object> data = body.getSource();
+    Assert.assertEquals(data.size(), 5);
   }
 
   @Autowired
