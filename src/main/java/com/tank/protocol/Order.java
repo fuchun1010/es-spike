@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
  */
 @Getter
 @Setter
-@EqualsAndHashCode(of = {""})
+@Accessors(chain = true)
+@EqualsAndHashCode(of = {"orderNo"})
 public class Order implements Serializable {
 
   /**
@@ -30,17 +32,15 @@ public class Order implements Serializable {
   private String comment;
   private List<ItemsBean> items = Lists.newArrayList();
 
-
+  @Setter
   @Getter
+  @Accessors(chain = true)
   public static class ItemsBean {
     /**
      * snapshotId : s0001
      * weight : 20
      */
-
     private String snapshotId;
     private int weight;
-
-
   }
 }
