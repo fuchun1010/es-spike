@@ -9,9 +9,14 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +35,7 @@ public class ElasticSearchTest {
 
   @Before
   public void initJsonObject() {
-    this.objectMapper = new ObjectMapper();
+    this.jsonMapper = new ObjectMapper();
   }
 
   @Test
@@ -39,8 +44,8 @@ public class ElasticSearchTest {
       GetRequest request = new GetRequest(index, "1");
       return this.resetClient.get(request, RequestOptions.DEFAULT);
     }).onSuccess(GetResponse::getSource).map(GetResponse::getSource)
-            .transform(d -> Try.of(() -> this.objectMapper.writeValueAsString(d.get())))
-            .transform(str -> Try.of(() -> this.objectMapper.readValue(str.get(), Order.class)))
+            .transform(d -> Try.of(() -> this.jsonMapper.writeValueAsString(d.get())))
+            .transform(str -> Try.of(() -> this.jsonMapper.readValue(str.get(), Order.class)))
             .getOrElseThrow(() -> new IllegalArgumentException("id为1的不存在"));
     Assert.assertEquals(tmpOrder.getItems().size(), 1);
   }
@@ -60,7 +65,7 @@ public class ElasticSearchTest {
     order.getItems().add(item2);
 
 
-    BulkRequest prepareReq = Try.of(() -> this.objectMapper.writeValueAsString(order))
+    BulkRequest prepareReq = Try.of(() -> this.jsonMapper.writeValueAsString(order))
             .transform(tryJsonStr -> {
               val request = new BulkRequest();
               return request.add(new IndexRequest(index).id(order.getOrderNo())
@@ -74,7 +79,27 @@ public class ElasticSearchTest {
 
   }
 
-  
+  @Test
+  public void queryDataWithOneCondition() throws Exception {
+    SearchRequest request = new SearchRequest();
+    request.indices(this.index);
+    val sourceBuilder = new SearchSourceBuilder();
+    val matchBuilder = new MatchQueryBuilder("comment", "一条测试数据");
+    sourceBuilder.query(matchBuilder);
+    request.source(sourceBuilder);
+    val response = Try.of(() -> this.resetClient.search(request, RequestOptions.DEFAULT))
+            .getOrElseThrow(() -> new Exception("没找到"));
+    SearchHits searchHits = response.getHits();
+    Assert.assertEquals(searchHits.getHits().length, 1L);
+    for (SearchHit searchHit : searchHits) {
+      val data = searchHit.getSourceAsMap();
+      val jsonStr = this.jsonMapper.writeValueAsString(data);
+      Assert.assertNotNull(jsonStr);
+      Assert.assertTrue(jsonStr.trim().length() > 0);
+      System.out.println(jsonStr);
+    }
+
+  }
 
   @Autowired
   @Qualifier("restClient")
@@ -83,5 +108,5 @@ public class ElasticSearchTest {
   private final String index = "order-comment";
 
 
-  private ObjectMapper objectMapper = null;
+  private ObjectMapper jsonMapper = null;
 }
