@@ -14,6 +14,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -98,6 +99,31 @@ public class ElasticSearchTest {
       Assert.assertTrue(jsonStr.trim().length() > 0);
       System.out.println(jsonStr);
     }
+
+  }
+
+  @Test
+  public void queryDataWithBooleanFilter() throws Exception {
+    val request = new SearchRequest();
+    val searchSourceBuilder = new SearchSourceBuilder();
+    request.source(searchSourceBuilder);
+
+    val boolQueryBuilder = QueryBuilders.boolQuery();
+    val orderNoMatcher = new MatchQueryBuilder("orderNo", "1");
+    val snapshotIdMatcher = new MatchQueryBuilder("items.snapshotId", "s0001");
+    val allQueryBuilder = boolQueryBuilder.must(orderNoMatcher).must(snapshotIdMatcher);
+    searchSourceBuilder.query(allQueryBuilder);
+
+    val response = this.resetClient.search(request, RequestOptions.DEFAULT);
+    Assert.assertEquals(response.getHits().getHits().length, 1);
+    for (SearchHit searchHit : response.getHits()) {
+      val data = searchHit.getSourceAsMap();
+      val jsonStr = this.jsonMapper.writeValueAsString(data);
+      Assert.assertNotNull(jsonStr);
+      Assert.assertTrue(jsonStr.trim().length() > 0);
+      System.out.println(jsonStr);
+    }
+
 
   }
 
