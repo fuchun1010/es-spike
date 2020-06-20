@@ -2,6 +2,7 @@ package com.tank.protocol.condition;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.beans.Transient;
 import java.util.List;
@@ -11,8 +12,9 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class Condition<T> implements NestCondition {
-  
+@Accessors(chain = true)
+public class Condition<T extends Comparable<T>> implements NestCondition {
+
   private String op;
 
   private String fieldName;
