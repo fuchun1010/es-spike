@@ -26,6 +26,7 @@ public class Condition<T extends Comparable<T>> implements NestCondition {
     } else if ("range".equalsIgnoreCase(op)) {
       return new RangeQueryBuilder(this.getFieldName()).gte(values.get(0)).lte(values.get(1));
     } else if ("match".equals(op)) {
+      //TODO 多个门店的时候有bug需要改
       return new MatchQueryBuilder(this.getFieldName(), values.get(0));
     }
     return null;
