@@ -61,7 +61,12 @@
   ],
   "receiver":{
     "phone":"-"
-  }
+  },
+  "comments":[
+    {
+      "comment":"-"
+    }
+  ]
 }
 ```
 
@@ -113,6 +118,211 @@
 |url|申诉图片|N|-||
 |receiver||||
 |phone|收货人电话|N|-||
+|comments||||
+|comment|订单评论|N|||
+
+
+## 创建订单评论
+
+```text
+url: /order-comment/api/v1/comment/created
+method: post
+```
+
+#### request
+
+```json
+{
+  "orderNo":"s0001",
+  "items":[
+    {
+      "name":"xxx",
+      "comment":"-",
+      "score":4,
+      "complaintLevel":0,
+      "effective":0,
+      "departmentCode": "",
+      "payment":"15.4",
+      "refund":"15.4",
+      "salesMaintain":1,
+      "representationReason":"-",
+      "representationResource":[
+        {
+          "url":"-"
+        }
+      ],
+      "representationResult":"",
+      "representationComment":""
+    }  
+  ],
+  "channel":"x",
+  "commentDateTime": "2020-06-11-12 13:14:41",
+  "score": 5,
+  "disCode":"q0001",
+  "storeCode": "x0001",
+  "complaintChannel":"xx",
+  "complaintStatus": 1,
+  "issueType": 1,
+  "createdOrderDateTime": "2020-05-16 16:16:17",
+  "receiveOrderDateTime": "2020-05-17 16:16:17",
+  "complaintLevel":"x",
+  "effective": 0,
+  "judgement": 1,
+  "departmentCode": "d0001",
+  "salesMaintain":1,
+  "refund": 0,
+  "payment": 0,
+  "areaCode": "a0001",
+  "dispatchChannel": 1,
+  "cityCode": "xxx",
+  "representationReason": "",
+  "representationResource":[
+    {
+      "url":"-"
+    }  
+  ],
+  "representationResult":"",
+  "reply": 0,
+  "operator": "lisi",
+  "images":[
+    {
+      "url":"-"
+    }  
+  ],
+  "receiver":{
+    "phone":"-"
+  },
+  "comments":[
+    {
+      "comment":"-"
+    }
+  ]
+}
+```
+
+#### response
+```json
+{
+  "resultCode": 0,
+  "errorMsg":"",
+  "data": {}
+}
+```
+
+## 查询默认订单评论
+
+```text
+url: /order-comment/api/v1/${operatorName}/view/latest/comments
+method: post
+```
+
+#### request
+
+```json
+{
+  "logical": "must",
+  "conditions": [
+    {
+      "logical": "should",
+      "conditions": [
+        {
+          "op":"match",
+          "fieldName":"storeCode",
+          "type":"text",
+          "values":["0081","0087"]
+        }  
+      ]
+    },
+    {
+      "op": "range",
+      "fieldName": "commentDateTime",
+      "type": "date",
+      "value": [
+        "2019-12-11 13:12:11",
+        "2019-12-12 13:12:11"
+      ]
+    }
+  ]
+}
+```
+
+#### response
+```json
+{
+  "resultCode": 0,
+  "errorMsg": "",
+  "data": [
+    {
+      "orderNo": "s0001",
+      "items": [
+        {
+          "name": "xxx",
+          "comment": "-",
+          "score": 4,
+          "complaintLevel": 0,
+          "effective": 0,
+          "departmentCode": "",
+          "payment": "15.4",
+          "refund": "15.4",
+          "salesMaintain": 1,
+          "representationReason": "-",
+          "representationResource": [
+            {
+              "url": "-"
+            }
+          ],
+          "representationResult": "",
+          "representationComment": ""
+        }
+      ],
+      "channel": "x",
+      "commentDateTime": "2020-06-11-12 13:14:41",
+      "score": 5,
+      "disCode": "q0001",
+      "storeCode": "x0001",
+      "complaintChannel": "xx",
+      "complaintStatus": 1,
+      "issueType": 1,
+      "createdOrderDateTime": "2020-05-16 16:16:17",
+      "receiveOrderDateTime": "2020-05-17 16:16:17",
+      "complaintLevel": "x",
+      "effective": 0,
+      "judgement": 1,
+      "departmentCode": "d0001",
+      "salesMaintain": 1,
+      "refund": 0,
+      "payment": 0,
+      "areaCode": "a0001",
+      "dispatchChannel": 1,
+      "cityCode": "xxx",
+      "representationReason": "",
+      "representationResource": [
+        {
+          "url": "-"
+        }
+      ],
+      "representationResult": "",
+      "reply": 0,
+      "operator": "jack",
+      "images": [
+        {
+          "url": "-"
+        }
+      ],
+      "receiver": {
+        "phone": "-"
+      },
+      "comments": [
+        {
+          "comment": "-"
+        }
+      ]
+    }
+  ]
+}
+```
+
+
 
 
 

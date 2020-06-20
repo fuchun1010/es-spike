@@ -2,8 +2,10 @@ package com.tank;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tank.protocol.Order;
+import io.vavr.Tuple2;
 import io.vavr.control.Try;
 import lombok.val;
+import org.apache.http.HttpHost;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -25,7 +27,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Unit test for simple App.
@@ -33,6 +39,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class ElasticSearchTest {
+
+  @Test
+  public void testNodes() {
+    val nodes = environment.getProperty("spring.elasticsearch.rest.uris");
+    assert nodes != null;
+    val clusters = Stream.of(nodes.split(",")).map(node -> {
+      val url = node.split(":");
+      return new Tuple2<String, Integer>(url[0], Integer.parseInt(url[1]));
+    }).map(tuple -> new HttpHost(tuple._1(), tuple._2(), "http")).collect(Collectors.toList());
+    HttpHost[] hosts = new HttpHost[clusters.size()];
+    clusters.toArray(hosts);
+    Assert.assertEquals(hosts.length, 2);
+  }
 
   @Before
   public void initJsonObject() {
@@ -130,6 +149,9 @@ public class ElasticSearchTest {
   @Autowired
   @Qualifier("restClient")
   private RestHighLevelClient resetClient;
+
+  @Autowired
+  private Environment environment;
 
   private final String index = "order-comment";
 
