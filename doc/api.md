@@ -251,76 +251,88 @@ method: post
 {
   "resultCode": 0,
   "errorMsg": "",
-  "data": [
-    {
-      "orderNo": "s0001",
-      "items": [
-        {
-          "name": "xxx",
-          "comment": "-",
-          "score": 4,
-          "complaintLevel": 0,
-          "effective": 0,
-          "departmentCode": "",
-          "payment": "15.4",
-          "refund": "15.4",
-          "salesMaintain": 1,
-          "representationReason": "-",
-          "representationResource": [
-            {
-              "url": "-"
-            }
-          ],
-          "representationResult": "",
-          "representationComment": ""
-        }
-      ],
-      "channel": "x",
-      "commentDateTime": "2020-06-11-12 13:14:41",
-      "score": 5,
-      "disCode": "q0001",
-      "storeCode": "x0001",
-      "complaintChannel": "xx",
-      "complaintStatus": 1,
-      "issueType": 1,
-      "createdOrderDateTime": "2020-05-16 16:16:17",
-      "receiveOrderDateTime": "2020-05-17 16:16:17",
-      "complaintLevel": "x",
-      "effective": 0,
-      "judgement": 1,
-      "departmentCode": "d0001",
-      "salesMaintain": 1,
-      "refund": 0,
-      "payment": 0,
-      "areaCode": "a0001",
-      "dispatchChannel": 1,
-      "cityCode": "xxx",
-      "representationReason": "",
-      "representationResource": [
-        {
-          "url": "-"
-        }
-      ],
-      "representationResult": "",
-      "reply": 0,
-      "operator": "jack",
-      "images": [
-        {
-          "url": "-"
-        }
-      ],
-      "receiver": {
-        "phone": "-"
-      },
-      "comments": [
-        {
-          "comment": "-"
-        }
-      ]
-    }
-  ]
+  "data": {
+    "page": 10,
+    "payLoad": [
+      {
+            "orderNo": "s0001",
+            "items": [
+              {
+                "name": "xxx",
+                "comment": "-",
+                "score": 4,
+                "complaintLevel": 0,
+                "effective": 0,
+                "departmentCode": "",
+                "payment": "15.4",
+                "refund": "15.4",
+                "salesMaintain": 1,
+                "representationReason": "-",
+                "representationResource": [
+                  {
+                    "url": "-"
+                  }
+                ],
+                "representationResult": "",
+                "representationComment": ""
+              }
+            ],
+            "channel": "x",
+            "commentDateTime": "2020-06-11-12 13:14:41",
+            "score": 5,
+            "disCode": "q0001",
+            "storeCode": "x0001",
+            "complaintChannel": "xx",
+            "complaintStatus": 1,
+            "issueType": 1,
+            "createdOrderDateTime": "2020-05-16 16:16:17",
+            "receiveOrderDateTime": "2020-05-17 16:16:17",
+            "complaintLevel": "x",
+            "effective": 0,
+            "judgement": 1,
+            "departmentCode": "d0001",
+            "salesMaintain": 1,
+            "refund": 0,
+            "payment": 0,
+            "areaCode": "a0001",
+            "dispatchChannel": 1,
+            "cityCode": "xxx",
+            "representationReason": "",
+            "representationResource": [
+              {
+                "url": "-"
+              }
+            ],
+            "representationResult": "",
+            "reply": 0,
+            "operator": "jack",
+            "images": [
+              {
+                "url": "-"
+              }
+            ],
+            "receiver": {
+              "phone": "-"
+            },
+            "comments": [
+              {
+                "comment": "-"
+              }
+            ]
+          }
+    ]   
+  } 
 }
 ```
+
+#### 字段说明
+
+| 字段 | 注释 | 是否必填 | 默认值| 备注 |
+| resultCode | 状态码| N | 0 |0表示没有错误,其余按约定逻辑码 |
+| errorMsg | 错误消息 | N | 长度为0的空字符串 |服务端错误信息 |
+|data||
+|data.page| 总页码数 | Y | | |
+|data.payLoad| 查询的类容| Y |||
 
 
 
