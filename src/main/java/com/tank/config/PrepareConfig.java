@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author tank198435163.com
  */
 @Configuration
-public class PrepareConfig {
+public class PrepareConfig  {
 
   @Bean(name = "restClient", destroyMethod = "close")
   public RestHighLevelClient initRestHighLevelClient() {
