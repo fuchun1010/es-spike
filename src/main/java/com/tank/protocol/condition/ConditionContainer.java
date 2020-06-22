@@ -1,6 +1,8 @@
 package com.tank.protocol.condition;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.Lists;
+import com.tank.protocol.deserialization.ConditionContainerDeserializer;
 import lombok.*;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -13,6 +15,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@JsonDeserialize(using = ConditionContainerDeserializer.class)
 public class ConditionContainer implements NestCondition {
 
   @Override

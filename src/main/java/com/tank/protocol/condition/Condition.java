@@ -1,5 +1,6 @@
 package com.tank.protocol.condition;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -38,7 +39,7 @@ public class Condition<T extends Comparable<T>> implements NestCondition {
 
   private String type;
 
-  private List<String> values;
+  private List<String> values = Lists.newArrayList();
 
   @Override
   @Transient

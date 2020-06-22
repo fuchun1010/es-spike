@@ -1,12 +1,11 @@
 package com.tank.controller;
 
 import com.google.common.collect.Maps;
+import com.tank.protocol.condition.ConditionContainer;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -26,6 +25,12 @@ public class OrderController {
     return ResponseEntity.ok(body);
   }
 
+  @PostMapping("/query")
+  public ResponseEntity<Map<String, Object>> query(@RequestBody ConditionContainer container) {
+    Map<String, Object> body = Maps.newConcurrentMap();
+    body.put("hello", "2");
+    return ResponseEntity.ok(body);
+  }
 
 
 }
