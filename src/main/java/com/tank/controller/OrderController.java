@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.tank.protocol.condition.ConditionContainer;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class OrderController {
   @PostMapping("/query")
   public ResponseEntity<Map<String, Object>> query(@RequestBody ConditionContainer container) {
     Map<String, Object> body = Maps.newConcurrentMap();
+    BoolQueryBuilder boolQueryBuilder = container.parse();
     body.put("hello", "2");
     return ResponseEntity.ok(body);
   }

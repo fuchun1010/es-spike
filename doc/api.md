@@ -239,7 +239,7 @@ method: post
       "op": "range",
       "fieldName": "commentDateTime",
       "type": "date",
-      "value": [
+      "values": [
         "2019-12-11 13:12:11",
         "2019-12-12 13:12:11"
       ]
