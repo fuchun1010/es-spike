@@ -218,7 +218,7 @@ method: post
 
 #### request
 
-// 1 =1 and  （storeCode = "0081" or storeCode = "0081""）  and commentDateTime between 2019-12-11 13:12:11 and 2019-12-12 13:12:11
+// 1 = 1 and  （storeCode = "0081" or storeCode = "0081""）  and commentDateTime between 2019-12-11 13:12:11 and 2019-12-12 13:12:11
 
 ```json
 {
