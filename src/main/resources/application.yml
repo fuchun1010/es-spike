@@ -10,3 +10,4 @@ spring:
     rest:
       uris: localhost:9200,localhost:9201
 
+
