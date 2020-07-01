@@ -1,0 +1,8 @@
+nacos:
+  config:
+    auto-refresh: true
+    server-addr: 127.0.0.1:8848
+    namespace: 0342f92e-cd4e-482d-91db-3ddb0f58e529
+    type: yaml
+
+

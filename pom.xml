@@ -68,10 +68,22 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
             <version>7.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>nacos-config-spring-boot-starter</artifactId>
+            <version>0.2.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
     </dependencies>
@@ -89,4 +101,11 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <developers>
+        <developer>
+            <name>tank</name>
+            <email>fuchun198435@163.com</email>
+        </developer>
+    </developers>
 </project>
