@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author tank198435163.com
  */
 @SpringBootApplication
-@NacosPropertySource(dataId = "es-spike.yaml")
+@NacosPropertySource(dataId = "es-spike.yaml", autoRefreshed = true)
 public class App {
   public static void main(final String[] args) {
     SpringApplication.run(App.class, args);

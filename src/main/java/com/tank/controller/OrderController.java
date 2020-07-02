@@ -1,5 +1,6 @@
 package com.tank.controller;
 
+import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.google.common.collect.Maps;
 import com.tank.protocol.condition.ConditionContainer;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,17 @@ public class OrderController {
     body.put("hello", "2");
     return ResponseEntity.ok(body);
   }
+
+  @GetMapping("/name")
+  public ResponseEntity<Map<String, String>> name() {
+    Map<String, String> body = Maps.newHashMap();
+    body.put("name", this.name);
+    return ResponseEntity.ok(body);
+  }
+
+  //auto refreshed must here
+  @NacosValue(value = "${test.name}", autoRefreshed = true)
+  private String name;
 
 
 }
