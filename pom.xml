@@ -28,6 +28,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <guava.version>23.0</guava.version>
         <elasticsearch.version>7.7.1</elasticsearch.version>
+        <nacos-config.version>0.2.7</nacos-config.version>
     </properties>
 
     <dependencies>
@@ -72,13 +73,13 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.7.1</version>
+            <version>${elasticsearch.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba.boot</groupId>
             <artifactId>nacos-config-spring-boot-starter</artifactId>
-            <version>0.2.7</version>
+            <version>${nacos-config.version}</version>
         </dependency>
 
         <dependency>

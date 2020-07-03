@@ -42,7 +42,6 @@ public class OrderController {
     return ResponseEntity.ok(body);
   }
 
-  //auto refreshed must here
   @NacosValue(value = "${test.name}", autoRefreshed = true)
   private String name;
 
