@@ -2,6 +2,7 @@ package com.tank.dto;
 
 import com.tank.entity.Customer;
 import com.tank.entity.mapper.CustomerDtoMapper;
+import io.vavr.collection.Stream;
 import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,6 +36,12 @@ public class CustomerDtoTest {
     Assert.assertNotNull(dto);
     Assert.assertEquals(dto.getUsername(), customer.getName());
     Assert.assertEquals(String.valueOf(dto.getGender()), customer.getGender());
+  }
+
+  @Test
+  public void testFlatMapWithSplitter() {
+    val size = Stream.of("hello,the world".split(",")).size();
+    Assert.assertEquals(size, 2);
   }
 
 }

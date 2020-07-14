@@ -42,6 +42,7 @@ public class OrderController {
     return ResponseEntity.ok(body);
   }
 
+
   @NacosValue(value = "${test.name}", autoRefreshed = true)
   private String name;
 
