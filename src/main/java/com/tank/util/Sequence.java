@@ -26,7 +26,7 @@ public class Sequence<T> {
     try {
       val isFull = this.queue.size() == 200;
       if (isFull) {
-        System.out.println(format("%s block", Thread.currentThread().getName()));
+        System.out.println(format("%s is full and is block", Thread.currentThread().getName()));
         this.consumeCondition.signalAll();
         this.produceCondition.await();
       }
