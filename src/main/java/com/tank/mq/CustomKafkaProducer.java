@@ -49,18 +49,19 @@ public class CustomKafkaProducer {
   private Properties initProps() {
     val props = new Properties();
     val serializer = "org.apache.kafka.common.serialization.StringSerializer";
+    val topicName = "demo";
     props.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     props.put(KEY_SERIALIZER_CLASS_CONFIG, serializer);
     props.put(VALUE_SERIALIZER_CLASS_CONFIG, serializer);
-    props.put("topic", "demo");
+    props.put("topic", topicName);
     props.put(LINGER_MS_CONFIG, 10);
     return props;
   }
 
   private final Properties props;
 
-  private KafkaProducer<String, String> producer;
+  private final KafkaProducer<String, String> producer;
 
-  private JsonMapper jsonMapper;
+  private final JsonMapper jsonMapper;
 
 }
