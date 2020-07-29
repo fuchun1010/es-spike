@@ -31,6 +31,7 @@ public class CustomKafkaProducer {
   public <T extends StandDto> WriteRecord sendMessage(@NonNull final T data) {
     val topic = this.props.getProperty("topic");
     assert "demo".equalsIgnoreCase(topic);
+
     return Try.of(() -> this.jsonMapper.writeValueAsString(data))
             .map(json -> new ProducerRecord<String, String>(topic, json))
             .map(record -> {
@@ -39,6 +40,7 @@ public class CustomKafkaProducer {
                   log.error("write to kafka topic :[{}] failure", topic);
                 }
               });
+
               return Try.of(future::get).map(recordMetadata -> {
                 log.info("topic :[{}], partition:[{}], offset:[{}]", recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
                 return new WriteRecord(recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
