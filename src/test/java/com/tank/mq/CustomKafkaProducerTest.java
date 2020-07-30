@@ -11,7 +11,7 @@ public class CustomKafkaProducerTest {
   @Test
   public void testSendMessage() {
     PersonDto personDto = new PersonDto();
-    personDto.setCardId("s0007").setGender(1).setJob("driver7");
+    personDto.setCardId("s0009").setGender(1).setJob("driver9");
     val writeRecord = this.producer.sendMessage(personDto);
     Assert.assertTrue(writeRecord.writeSuccessfully());
   }

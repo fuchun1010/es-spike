@@ -9,6 +9,6 @@ public class ConsumerMain {
   public static void main(final String[] args) {
     val customKafkaConsumer = new CustomKafkaConsumer();
     //customKafkaConsumer.acceptMessage();
-    customKafkaConsumer.fetchMessageFrom("demo", 0, 5L);
+    customKafkaConsumer.fetchMessageFrom("demo", 0, 0L);
   }
 }

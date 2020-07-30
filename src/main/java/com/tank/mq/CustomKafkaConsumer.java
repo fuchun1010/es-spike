@@ -8,7 +8,6 @@ import lombok.val;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
 import java.time.Duration;
@@ -47,12 +46,9 @@ public class CustomKafkaConsumer {
     val targetTopic = new TopicPartition(topic, partitionId);
     this.consumer.assign(Collections.singletonList(targetTopic));
 
-
-    val offsetAndMetadata = new OffsetAndMetadata(offset);
-
     this.consumer.seekToBeginning(Collections.singletonList(targetTopic));
 
-    while (true) {
+    do {
       val records = this.consumer.poll(Duration.ofMillis(100));
       for (ConsumerRecord<String, String> record : records) {
         if (record.offset() == offset) {
@@ -60,7 +56,7 @@ public class CustomKafkaConsumer {
           break;
         }
       }
-    }
+    } while (true);
 
   }
 
