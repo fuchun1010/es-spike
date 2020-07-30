@@ -1,11 +1,15 @@
 package com.tank.mq;
 
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -29,18 +33,45 @@ public class CustomKafkaConsumer {
   public CustomKafkaConsumer() {
     this.props = this.initProps();
     this.consumer = new KafkaConsumer<String, String>(props);
-    this.consumer.subscribe(Collections.singletonList("demo"));
+
     this.executorService = this.initThreadPool();
   }
 
+  public void fetchMessageFrom(@NonNull final String topic,
+                               @NonNull final Integer partitionId,
+                               @NonNull final Long offset) {
+    Preconditions.checkArgument(topic.trim().length() > 0, "topic name not allowed empty string");
+    Preconditions.checkArgument(partitionId >= 0, "partition id is not allowed less than zero");
+    Preconditions.checkArgument(offset >= 0, "offset is not allowed less than zero");
+
+    val targetTopic = new TopicPartition(topic, partitionId);
+    this.consumer.assign(Collections.singletonList(targetTopic));
+
+
+    val offsetAndMetadata = new OffsetAndMetadata(offset);
+
+    this.consumer.seekToBeginning(Collections.singletonList(targetTopic));
+
+    while (true) {
+      val records = this.consumer.poll(Duration.ofMillis(100));
+      for (ConsumerRecord<String, String> record : records) {
+        if (record.offset() == offset) {
+          System.out.println("topic = " + topic + ", partitionId = " + partitionId + ", value = " + record.value());
+          break;
+        }
+      }
+    }
+
+  }
+
   public void acceptMessage() {
+    this.consumer.subscribe(Collections.singletonList("demo"));
     if (Objects.isNull(thread)) {
       this.executorService.execute(() -> {
         val topic = this.props.getProperty("topic", "-");
         log.info("listening topic:[{}]", topic);
         while (running) {
           val consumerRecords = this.consumer.poll(Duration.ofMillis(100));
-
           for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
             log.info("record value:[{}]", consumerRecord.value());
           }
