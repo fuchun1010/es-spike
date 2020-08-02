@@ -33,17 +33,15 @@ public class MyProducer<K, V> {
     return this;
   }
 
-  public <S, D> MyProducer<K, V> customProducer(@NonNull final Class<S> serialClazz,
-                                                @NonNull final Class<D> deSerialClazz) {
+  public <S, D> MyProducer<K, V> customProducer(@NonNull final Class<S> serialClazz) {
 
-    this.producer = new KafkaProducer<K, V>(this.initProperties(serialClazz, deSerialClazz));
+    this.producer = new KafkaProducer<K, V>(this.initProperties(serialClazz));
     return this;
   }
 
-  public <S, D> MyProducer<K, V> customProducer(@NonNull final String clientId, @NonNull final Class<S> serialClazz,
-                                                @NonNull final Class<D> deSerialClazz) {
+  public <S, D> MyProducer<K, V> customProducer(@NonNull final String clientId, @NonNull final Class<S> serialClazz) {
     this.clientId = clientId;
-    this.producer = new KafkaProducer<K, V>(this.initProperties(serialClazz, deSerialClazz));
+    this.producer = new KafkaProducer<K, V>(this.initProperties(serialClazz));
     return this;
   }
 
@@ -63,15 +61,15 @@ public class MyProducer<K, V> {
     }).getOrElse(new WriteRecord());
   }
 
-  public <S, D> Properties initProperties(@NonNull final Class<S> serialClazz,
-                                          @NonNull final Class<D> deSerialClazz) {
+  public <S, D> Properties initProperties(@NonNull final Class<S> serialClazz) {
     val props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, serialClazz.getName());
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, deSerialClazz.getName());
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serialClazz.getName());
     props.put(ProducerConfig.CLIENT_ID_CONFIG, Option.of(this.clientId).getOrElse("kafka-producer"));
     props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
     props.put(ProducerConfig.LINGER_MS_CONFIG, 10);
+    props.put("clazz", serialClazz);
     return props;
   }
 
@@ -82,7 +80,7 @@ public class MyProducer<K, V> {
   }
 
   private <S, D> Properties initProperties() {
-    return this.initProperties(StringSerializer.class, StringSerializer.class);
+    return this.initProperties(StringSerializer.class);
   }
 
   private KafkaProducer<K, V> producer;
