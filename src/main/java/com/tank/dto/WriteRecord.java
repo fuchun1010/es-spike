@@ -1,5 +1,6 @@
 package com.tank.dto;
 
+import com.google.common.base.MoreObjects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,4 +26,10 @@ public class WriteRecord {
   private int partitionId;
 
   private long offset = -1L;
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this).add("topicName", this.topicName)
+            .add("partitionId", this.partitionId).add("offset", this.offset).toString();
+  }
 }
