@@ -29,6 +29,7 @@
         <guava.version>23.0</guava.version>
         <elasticsearch.version>7.7.1</elasticsearch.version>
         <kafka.client.version>2.5.0</kafka.client.version>
+        <protostuff.version>1.7.2</protostuff.version>
     </properties>
 
     <dependencies>
@@ -81,6 +82,19 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka.client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-core</artifactId>
+            <version>${protostuff.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-runtime</artifactId>
+            <version>${protostuff.version}</version>
         </dependency>
 
     </dependencies>
