@@ -1,6 +1,5 @@
 package com.tank.mq.guess;
 
-import com.google.common.base.Preconditions;
 import io.protostuff.ProtobufIOUtil;
 import io.protostuff.runtime.RuntimeSchema;
 import lombok.val;
@@ -23,7 +22,9 @@ public class ProtoStuffDeSerial<T> implements Deserializer<T> {
   @SuppressWarnings("unchecked")
   public T deserialize(String topic, byte[] data) {
     val isNotExists = configs.size() == 0 || !configs.containsKey("clazz");
-    Preconditions.checkArgument(isNotExists, "clazz 必须指定");
+    if (isNotExists) {
+      throw new IllegalArgumentException("topic 参数必须指定");
+    }
     final Class<T> clazz = ((Class<T>) configs.get("clazz"));
     val schema = RuntimeSchema.getSchema(clazz);
     val object = schema.newMessage();

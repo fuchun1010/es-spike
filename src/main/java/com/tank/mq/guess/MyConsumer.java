@@ -1,5 +1,8 @@
 package com.tank.mq.guess;
 
+import com.tank.dto.OrderDto;
+import io.vavr.CheckedConsumer;
+import io.vavr.collection.Stream;
 import lombok.NonNull;
 import lombok.val;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -9,8 +12,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 /**
  * @author tank198435163.com
@@ -21,14 +24,23 @@ public class MyConsumer<K, V> {
     this.props = this.initProps();
   }
 
-  public void handleReceivedMessage(@NonNull final String topic, @NonNull final Consumer<V> fun) {
+  public void stopConsume() {
+    this.isRunning = false;
+    Stream.of(this.consumer).filter(Objects::nonNull).forEach(KafkaConsumer::close);
+  }
+
+  public void handleReceivedMessage(@NonNull final String topic, @NonNull final CheckedConsumer<V> fun) {
     this.consumer.subscribe(Collections.singletonList(topic));
     do {
       val records = this.consumer.poll(Duration.ofMillis(100));
-      for (ConsumerRecord<K, V> record : records) {
-        fun.accept(record.value());
+      try {
+        for (ConsumerRecord<K, V> record : records) {
+          fun.accept(record.value());
+        }
+      } catch (final Throwable e) {
+        e.printStackTrace();
       }
-    } while (true);
+    } while (isRunning);
   }
 
   public MyConsumer<K, V> defaultJsonDeSerial() {
@@ -42,6 +54,7 @@ public class MyConsumer<K, V> {
     val protoStuffDeSerial = new ProtoStuffDeSerial<V>();
     val deSerialName = protoStuffDeSerial.getClass().getName();
     val self = this.configDeSerial(deSerialName);
+    this.props.put("clazz", OrderDto.class);
     this.consumer = new KafkaConsumer<K, V>(this.props);
     return self;
   }
@@ -66,6 +79,8 @@ public class MyConsumer<K, V> {
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     return props;
   }
+
+  private volatile boolean isRunning = true;
 
   private KafkaConsumer<K, V> consumer;
 

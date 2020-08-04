@@ -45,8 +45,8 @@ public class MyProducer<K, V> {
     return this;
   }
 
-
   public <I> WriteRecord sendMessage(@NonNull final String topicName, @NonNull final I data, @NonNull final CheckedFunction1<I, V> serialFunction) {
+    //TODO should print log info
     val record = new ProducerRecord<K, V>(topicName, Try.of(() -> serialFunction.apply(data)).get());
     return Try.of(() -> this.producer.send(record, (metadata, exception) -> {
       if (Objects.nonNull(exception)) {
@@ -61,10 +61,10 @@ public class MyProducer<K, V> {
     }).getOrElse(new WriteRecord());
   }
 
-  public <S, D> Properties initProperties(@NonNull final Class<S> serialClazz) {
+  public <S> Properties initProperties(@NonNull final Class<S> serialClazz) {
     val props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, serialClazz.getName());
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serialClazz.getName());
     props.put(ProducerConfig.CLIENT_ID_CONFIG, Option.of(this.clientId).getOrElse("kafka-producer"));
     props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
@@ -73,7 +73,7 @@ public class MyProducer<K, V> {
     return props;
   }
 
-  public void closeProducer() {
+  public void close() {
     if (Objects.nonNull(this.producer)) {
       this.producer.close();
     }
