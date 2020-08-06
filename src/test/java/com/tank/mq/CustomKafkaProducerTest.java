@@ -11,13 +11,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 public class CustomKafkaProducerTest {
 
   @Test
   public void testSendMessage() {
     PersonDto personDto = new PersonDto();
     personDto.setCardId("s0009").setGender(1).setJob("driver9");
-    val writeRecord = this.producer.sendMessage(personDto);
+    val writeRecord = this.producer.sendMessage(personDto, Optional.of(personDto.getCardId()));
     Assert.assertTrue(writeRecord.writeSuccessfully());
   }
 

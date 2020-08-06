@@ -11,6 +11,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 
 import static org.apache.kafka.clients.producer.ProducerConfig.*;
@@ -28,12 +29,13 @@ public class CustomKafkaProducer {
   }
 
 
-  public <T extends StandDto> WriteRecord sendMessage(@NonNull final T data) {
+  public <T extends StandDto> WriteRecord sendMessage(@NonNull final T data,
+                                                      @NonNull final Optional<String> optKey) {
     val topic = this.props.getProperty("topic");
     assert "demo".equalsIgnoreCase(topic);
 
     return Try.of(() -> this.jsonMapper.writeValueAsString(data))
-            .map(json -> new ProducerRecord<String, String>(topic, json))
+            .map(json -> optKey.map(key -> new ProducerRecord<>(topic, key, json)).orElseGet(() -> new ProducerRecord<String, String>(topic, json)))
             .map(record -> {
               val future = this.producer.send(record, (metadata, exception) -> {
                 if (Objects.nonNull(exception)) {
