@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author tank198435163.com
@@ -24,12 +25,8 @@ public class MyConsumer<K, V> {
     this.props = this.initProps();
   }
 
-  public void stopConsume() {
-    this.isRunning = false;
-    Stream.of(this.consumer).filter(Objects::nonNull).forEach(KafkaConsumer::close);
-  }
-
-  public void handleReceivedMessage(@NonNull final String topic, @NonNull final CheckedConsumer<V> fun) {
+  public void handleReceivedMessage(@NonNull final String topic,
+                                    @NonNull final CheckedConsumer<V> fun) {
     this.consumer.subscribe(Collections.singletonList(topic));
     do {
       val records = this.consumer.poll(Duration.ofMillis(100));
@@ -39,8 +36,10 @@ public class MyConsumer<K, V> {
         }
       } catch (final Throwable e) {
         e.printStackTrace();
+      } finally {
+        this.stop();
       }
-    } while (isRunning);
+    } while (runningSwitch.get());
   }
 
   public MyConsumer<K, V> defaultJsonDeSerial() {
@@ -80,7 +79,13 @@ public class MyConsumer<K, V> {
     return props;
   }
 
-  private volatile boolean isRunning = true;
+  private void stop() {
+    this.runningSwitch.set(false);
+    Stream.of(this.consumer).filter(Objects::nonNull).forEach(KafkaConsumer::close);
+  }
+
+
+  private final AtomicBoolean runningSwitch = new AtomicBoolean(true);
 
   private KafkaConsumer<K, V> consumer;
 
