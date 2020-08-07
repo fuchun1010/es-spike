@@ -1,6 +1,7 @@
 package com.tank.guess;
 
 import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import lombok.NonNull;
 import lombok.val;
 import org.junit.Test;
@@ -18,6 +19,12 @@ public class MyObserver {
     val observerContainer = new ObserverContainer();
     observerContainer.addObserver(jack, john);
     observerContainer.notifyAllObservers("this is received message");
+  }
+
+  @Test
+  public void testNull() {
+    val result = Option.of(null).getOrElse("-");
+    System.out.println(result);
   }
 
 

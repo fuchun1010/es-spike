@@ -1,8 +1,7 @@
 package com.tank.mq;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.tank.dto.OrderDto;
-import com.tank.mq.guess.MyConsumer;
+import com.tank.mq.guess.assigin.SimpleConsumer;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -21,10 +20,14 @@ public class ConsumerMain {
 //      val orderDto = Try.of(() -> mapper.readValue(json.getBytes(), OrderDto.class)).get();
 //      System.out.println("order no ==========> " + orderDto.getOrderNo());
 //    });
-    val customKafkaConsumer = new MyConsumer<String, OrderDto>();
-    customKafkaConsumer.customDeSerial().handleReceivedMessage("order", orderDto -> {
-      val json = mapper.writeValueAsString(orderDto);
-      log.info("order dto json:[{}]", json);
-    });
+//    val customKafkaConsumer = new MyConsumer<String, OrderDto>();
+//    customKafkaConsumer.customDeSerial().handleReceivedMessage("order", orderDto -> {
+//      val json = mapper.writeValueAsString(orderDto);
+//      log.info("order dto json:[{}]", json);
+//    });
+    val simpleConsumer = new SimpleConsumer();
+    // simpleConsumer.consume();
+    val result = simpleConsumer.readAssignOffsetValue("demo", 0, 1L).getOrElse(() -> "-");
+    System.out.println("result = " + result);
   }
 }
