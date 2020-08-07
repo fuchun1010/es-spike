@@ -1,5 +1,8 @@
 package com.tank.guess;
 
+import io.vavr.CheckedConsumer;
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import lombok.NonNull;
@@ -25,6 +28,38 @@ public class MyObserver {
   public void testNull() {
     val result = Option.of(null).getOrElse("-");
     System.out.println(result);
+  }
+
+  @Test
+  public void testGroup() {
+    Tuple2<String, String> v1 = new Tuple2<String, String>("1", "hello");
+    Tuple2<String, String> v2 = new Tuple2<String, String>("2", "hello2");
+    Tuple2<String, String> v3 = new Tuple2<String, String>("1", "hello3");
+
+    Stream.of(v1, v2, v3).groupBy(Tuple2::_1)
+            .get("1")
+            .map(Stream::toList)
+            .forEach(d -> this.print(d, element -> {
+              val tips = String.format("key is:[%s], value is:[%s]", element._1(), element._2());
+              System.out.println(tips);
+            }));
+
+  }
+
+  private <T> void print(@NonNull final List<T> list,
+                         @NonNull final CheckedConsumer<T> consumer) {
+    T data = list.head();
+    if (data != null) {
+      try {
+        consumer.accept(data);
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
+    }
+    val isEmpty = list.tail().isEmpty();
+    if (!isEmpty) {
+      this.print(list.tail(), consumer);
+    }
   }
 
 
