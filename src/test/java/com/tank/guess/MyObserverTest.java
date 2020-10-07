@@ -9,10 +9,14 @@ import lombok.NonNull;
 import lombok.val;
 import org.junit.Test;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MyObserver {
+public class MyObserverTest {
 
 
   @Test
@@ -44,6 +48,16 @@ public class MyObserver {
               System.out.println(tips);
             }));
 
+  }
+
+  @Test
+  public void testMillions() {
+    val millions = System.currentTimeMillis();
+    val instant = Instant.ofEpochMilli(millions);
+    val dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    val result = dateTimeFormatter.format(dateTime);
+    System.out.println(result);
   }
 
   private <T> void print(@NonNull final List<T> list,
